@@ -5,9 +5,11 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using InmobiliariaAlaniz.Models;
+using Microsoft.AspNetCore.Authorization;
 
 namespace InmobiliariaAlaniz.Controllers
 {
+    [Authorize]
     public class InmueblesController : Controller
     {
         RepositorioInmueble repo;
@@ -21,7 +23,7 @@ namespace InmobiliariaAlaniz.Controllers
         public ActionResult Index()
         {
             try{
-                var inmueble = repo.ObtenerTodos();
+                IList<Inmueble> inmueble = repo.ObtenerTodos();
                  /*if (TempData.ContainsKey("Id"))
                 ViewBag.Id = TempData["Id"];
                 if (TempData.ContainsKey("Mensaje"))
@@ -87,10 +89,7 @@ namespace InmobiliariaAlaniz.Controllers
             try {
                 var inmueble = repo.ObtenerPorId(id);
                 ViewBag.Propietarios = repoProp.ObtenerTodos();
-                if (TempData.ContainsKey("Mensaje"))
-                ViewBag.Mensaje = TempData["Mensaje"];
-                if (TempData.ContainsKey("Error"))
-                ViewBag.Error = TempData["Error"];
+              
                 return View(inmueble);
             }
             catch (Exception ex) {
@@ -132,10 +131,7 @@ namespace InmobiliariaAlaniz.Controllers
         {
              try {
                 var inmueble = repo.ObtenerPorId(id);
-                if (TempData.ContainsKey("Mensaje"))
-                ViewBag.Mensaje = TempData["Mensaje"];
-                if (TempData.ContainsKey("Error"))
-                ViewBag.Error = TempData["Error"];
+                
                 return View(inmueble);
             }
             catch (Exception ex) {

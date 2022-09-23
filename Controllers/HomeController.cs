@@ -1,6 +1,10 @@
 ﻿using System.Diagnostics;
 using Microsoft.AspNetCore.Mvc;
 using InmobiliariaAlaniz.Models;
+using Microsoft.AspNetCore.Authorization;
+using System.Security.Claims;
+using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authentication.Cookies;
 
 namespace InmobiliariaAlaniz.Controllers;
 
@@ -22,6 +26,18 @@ public class HomeController : Controller
     {
         return View();
     }
+  
+	[Authorize(Policy = "Administrador")]
+	public ActionResult Admin()
+	{
+			return View();
+	}
+
+	public ActionResult Restringido()
+	{
+			return View();
+	}
+		
 
     [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
     public IActionResult Error()

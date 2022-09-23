@@ -10,34 +10,32 @@ using Microsoft.AspNetCore.Authorization;
 namespace InmobiliariaAlaniz.Controllers
 {
     [Authorize]
-    public class ContratosController : Controller
+    public class PagosController : Controller
     {
-        RepositorioContrato repo;
-        RepositorioInquilino repositorioInquilino;
-        RepositorioInmueble repositorioInmueble;
+        RepositorioPago repo;
+        RepositorioContrato repositorioContrato;
+  
 
-        public ContratosController() {
-            repo = new RepositorioContrato();
-            repositorioInquilino = new RepositorioInquilino();
-            repositorioInmueble = new RepositorioInmueble();
+        public PagosController() {
+            repo = new RepositorioPago();
+            repositorioContrato = new RepositorioContrato();
+          
         }
       
         public ActionResult Index()
         {
             try{
-                var contrato = repo.ObtenerTodos();
+                var pago = repo.ObtenerTodos();
                  /*if (TempData.ContainsKey("Id"))
                 ViewBag.Id = TempData["Id"];
                 if (TempData.ContainsKey("Mensaje"))
                 ViewBag.Mensaje = TempData["Mensaje"];*/
-                return View(contrato);
+                return View(pago);
             }
             catch (Exception ex) {
                 throw;
             }
         }
-
-        
         public ActionResult Details(int id)
         {
             try {
@@ -50,11 +48,22 @@ namespace InmobiliariaAlaniz.Controllers
         }
 
         
-        public ActionResult Create()
+        public ActionResult Create(int id)
         {
             try {
-                ViewBag.Inquilinos = repositorioInquilino.ObtenerTodos();
-                ViewBag.Inmuebles = repositorioInmueble.ObtenerTodos(); 
+                if (id > 0) 
+                {
+                    Contrato contrato = repositorioContrato.ObtenerPorId(id);
+                    if (contrato.Id == 0)
+                    {
+                        TempData["mensaje"] = "Contrato no encontrado";
+                        return View();
+                    }
+
+                    ViewBag.Contrato = contrato;
+                    return View();
+                }
+                ViewBag.Contratos = repositorioContrato.ObtenerTodos();
                 return View();
             }
             catch (Exception ex) {
@@ -65,22 +74,27 @@ namespace InmobiliariaAlaniz.Controllers
         
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create(Contrato contrato)
+        public ActionResult Create(int id, Pago pago)
         {
            try
             {
-                // TODO: Add insert logic here
-                //if (ModelState.IsValid) {
-                    repo.Alta(contrato);
-                    //TempData["Id"] = inmueble.Id;
-                    return RedirectToAction(nameof(Index));
-                /*}
-                else {
-                    ViewBag.Propietarios = repoProp.ObtenerTodos();
-                    return View(inmueble);
-                }*/
+                 if (id > 0 && pago.IdContrato == 0)
+                    {
+                        pago.Id = 0;
+                        pago.IdContrato = id;
+                    }
+                        var res = repo.Alta(pago);
+                        if (res > 0)
+                        {
+                            TempData["mensaje"] = "Pago guardado correctamente";
+                            return RedirectToAction(nameof(Index));
+                        } else
+                        {
+                            TempData["mensaje"] = "Error al cargar";
+                            return RedirectToAction(nameof(Create));
+                        }
             }
-            catch
+            catch(Exception ex)
             {
                 throw;
             }
@@ -90,11 +104,11 @@ namespace InmobiliariaAlaniz.Controllers
         public ActionResult Edit(int id)
         {
             try {
-                var contrato = repo.ObtenerPorId(id);
-                ViewBag.Inquilinos = repositorioInquilino.ObtenerTodos();
-                ViewBag.Inmuebles = repositorioInmueble.ObtenerTodos();
-               
-                return View(contrato);
+                var pago = repo.ObtenerPorId(id);
+                ViewBag.Contratos = repositorioContrato.ObtenerTodos();
+
+          
+                return View(pago);
             }
             catch (Exception ex) {
                 throw;
@@ -105,20 +119,18 @@ namespace InmobiliariaAlaniz.Controllers
        
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit(int id, Contrato contrato)
+        public ActionResult Edit(int id, Pago pago)
         {
-            Contrato contrato1 = null;
+            Pago p = null;
 
             try
             {
                 // TODO: Add update logic here
-                contrato1 = repo.ObtenerPorId(id);
-                contrato1.IdInquilino = contrato.IdInquilino;
-                contrato1.IdInmueble = contrato.IdInmueble;
-                contrato1.FechaInicio = contrato.FechaInicio;
-                contrato1.FechaFin = contrato.FechaFin;
-             
-                repo.Modificacion(contrato1);
+                p = repo.ObtenerPorId(id);
+                p.FechaPago = pago.FechaPago;
+                p.Importe = pago.Importe;
+                p.IdContrato = pago.IdContrato;             
+                repo.Modificacion(p);
                 
                 return RedirectToAction(nameof(Index));
             }
@@ -132,9 +144,9 @@ namespace InmobiliariaAlaniz.Controllers
         public ActionResult Delete(int id)
         {
              try {
-                var contrato = repo.ObtenerPorId(id);
-                
-                return View(contrato);
+                var pago = repo.ObtenerPorId(id);
+               
+                return View(pago);
             }
             catch (Exception ex) {
                 throw;
@@ -144,7 +156,8 @@ namespace InmobiliariaAlaniz.Controllers
        
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Delete(int id, Contrato contrato)
+        
+        public ActionResult Delete(int id, Pago pago)
         {
            try
             {

@@ -5,9 +5,11 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using InmobiliariaAlaniz.Models;
+using Microsoft.AspNetCore.Authorization;
 
 namespace InmobiliariaAlaniz.Controllers
 {
+    [Authorize]
     public class InquilinosController : Controller
     {
         RepositorioInquilino repo;
@@ -19,7 +21,7 @@ namespace InmobiliariaAlaniz.Controllers
         public ActionResult Index()
         {
             try{
-                var inquilino = repo.ObtenerTodos();
+                IList<Inquilino> inquilino = repo.ObtenerTodos();
                 return View(inquilino);
             }
             catch (Exception ex) {
