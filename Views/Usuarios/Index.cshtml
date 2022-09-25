@@ -1,7 +1,7 @@
 @model IEnumerable<InmobiliariaAlaniz.Models.Usuario>
 
 @{
-    ViewData["Title"] = "Index";
+    ViewData["Title"] = "Menú";
 }
 
 <h1>Menú</h1>
@@ -56,7 +56,12 @@
             <td>
                 @Html.ActionLink("Editar", "Edit", new { id=item.Id }) |
                 @Html.ActionLink("Detalle", "Details", new { id=item.Id }) |
-                @Html.ActionLink("Borrar", "Delete", new { id=item.Id })
+                @if (User.IsInRole("Administrador"))
+                    {
+                        <label>|</label>
+                        @Html.ActionLink("Borrar", "Delete", new { id=item.Id })
+                    }
+ 
             </td>
         </tr>
 }

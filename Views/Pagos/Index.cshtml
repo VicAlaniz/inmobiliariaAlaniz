@@ -2,6 +2,7 @@
 
 @{
     ViewData["Title"] = "Menú";
+    
 }
 
 <h1>Inicio</h1>
@@ -27,9 +28,7 @@
     <tbody>
 @foreach (var item in Model) {
         <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.Id)
-            </td>
+          
             <td>
                  @(item.FechaPago.Date.ToString("dd/MM/yyyy"))
             </td>
@@ -37,7 +36,7 @@
                 @Html.DisplayFor(modelItem => item.Importe)
             </td>
             <td>
-                @(item.IdContrato + " "+item.Contrato.Inmueble.Direccion+" "+item.Contrato.Inquilino.Apellido)
+                @("Id Contrato: "+item.IdContrato + " - Dirección: "+item.Contrato.Inmueble.Direccion+" - Inquilino; "+item.Contrato.Inquilino.Apellido+", "+item.Contrato.Inquilino.Nombre)
             </td>
             <td>
                 @Html.ActionLink("Editar", "Edit", new { id=item.Id }) |
@@ -46,5 +45,8 @@
             </td>
         </tr>
 }
+<div>
+    @Html.ActionLink("Volver", "Index")
+</div>
     </tbody>
 </table>

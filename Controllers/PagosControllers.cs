@@ -51,18 +51,7 @@ namespace InmobiliariaAlaniz.Controllers
         public ActionResult Create(int id)
         {
             try {
-                if (id > 0) 
-                {
-                    Contrato contrato = repositorioContrato.ObtenerPorId(id);
-                    if (contrato.Id == 0)
-                    {
-                        TempData["mensaje"] = "Contrato no encontrado";
-                        return View();
-                    }
-
-                    ViewBag.Contrato = contrato;
-                    return View();
-                }
+                
                 ViewBag.Contratos = repositorioContrato.ObtenerTodos();
                 return View();
             }
@@ -78,21 +67,9 @@ namespace InmobiliariaAlaniz.Controllers
         {
            try
             {
-                 if (id > 0 && pago.IdContrato == 0)
-                    {
-                        pago.Id = 0;
-                        pago.IdContrato = id;
-                    }
-                        var res = repo.Alta(pago);
-                        if (res > 0)
-                        {
-                            TempData["mensaje"] = "Pago guardado correctamente";
-                            return RedirectToAction(nameof(Index));
-                        } else
-                        {
-                            TempData["mensaje"] = "Error al cargar";
-                            return RedirectToAction(nameof(Create));
-                        }
+                 repo.Alta(pago);
+                 TempData["mensaje"] = "Pago guardado correctamente";
+                 return RedirectToAction(nameof(Index));
             }
             catch(Exception ex)
             {

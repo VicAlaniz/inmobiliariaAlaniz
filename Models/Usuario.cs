@@ -22,7 +22,7 @@ public enum Roles{
         public string Clave {get; set;}
         public string? Avatar {get; set;}
         //[NotMapped]
-        public IFormFile AvatarFile { get; set; }
+        public IFormFile? AvatarFile { get; set; }
         public int Rol {get; set;}
         public string RolesName => Rol>0 ? ((Roles)Rol).ToString() : "";
 

@@ -30,7 +30,7 @@ namespace InmobiliariaAlaniz.Models;
                             Apellido = reader.GetString(2),
                             Email = reader.GetString(3),
                             Clave = reader.GetString(4),
-                            Avatar = reader.GetString(5),
+                            Avatar = reader["Avatar"].ToString(),
                             Rol = reader.GetInt32(6),
                         });
 					}
@@ -61,7 +61,7 @@ namespace InmobiliariaAlaniz.Models;
 							Apellido = reader.GetString(2),
                             Email = reader.GetString(3),
                             Clave = reader.GetString(4),
-                            Avatar = reader.GetString(5),
+                            Avatar = reader["Avatar"].ToString(),
                             Rol = reader.GetInt32(6),
 							
 						};
@@ -76,14 +76,14 @@ namespace InmobiliariaAlaniz.Models;
 			int res = -1;
 			using (var conn = new MySqlConnection(connectionString))
 			{
-				string sql = $"UPDATE Usuario SET Nombre=@nombre, Apellido=@apellido, Email=@email, Clave=@clave, Avatar=@avatar, Rol=@rol WHERE Id = @id";
+				string sql = $"UPDATE Usuario SET Nombre=@nombre, Apellido=@apellido, Email=@email, Avatar=@avatar, Rol=@rol WHERE Id = @id";
 				using (var comm = new MySqlCommand(sql, conn))
 				{
 					comm.CommandType = System.Data.CommandType.Text;
 					comm.Parameters.AddWithValue("@nombre", usu.Nombre);
 					comm.Parameters.AddWithValue("@apellido", usu.Apellido);
 					comm.Parameters.AddWithValue("@email", usu.Email);
-					comm.Parameters.AddWithValue("@clave", usu.Clave);
+		
 					if(String.IsNullOrEmpty(usu.Avatar))
 					comm.Parameters.AddWithValue("@avatar", DBNull.Value);
                     else comm.Parameters.AddWithValue("@avatar", usu.Avatar);
@@ -97,6 +97,25 @@ namespace InmobiliariaAlaniz.Models;
 			}
 			return res;
 		}
+		     public int ModificarClave(int id, CambiarClave p)
+        {
+            int res = -1;
+            using (var conn = new MySqlConnection(connectionString))
+            {
+                string sql = @"UPDATE Usuario SET Clave=@clave 
+                WHERE id = @id";
+                using (var comm = new MySqlCommand(sql, conn))
+                {
+                    comm.CommandType = System.Data.CommandType.Text;
+                    comm.Parameters.AddWithValue("@id", id);
+                    comm.Parameters.AddWithValue("@clave", p.PassConfirmada);
+                    conn.Open();
+                    res = comm.ExecuteNonQuery();
+                    conn.Close();
+                }
+            }
+            return res;
+        }
 		public int Alta(Usuario usu)
 		{
 			int res = -1;
@@ -165,7 +184,7 @@ namespace InmobiliariaAlaniz.Models;
 							Apellido = reader.GetString(2),
                             Email = reader.GetString(3),
                             Clave = reader.GetString(4),
-                            Avatar = reader.GetString(5),
+                            Avatar = reader["Avatar"].ToString(),
                             Rol = reader.GetInt32(6),
 						};
                     }

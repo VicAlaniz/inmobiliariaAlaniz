@@ -33,7 +33,7 @@ public class HomeController : Controller
 			return View();
 	}
 
-	public ActionResult Restringido()
+	public ActionResult AccesoRestringido()
 	{
 			return View();
 	}

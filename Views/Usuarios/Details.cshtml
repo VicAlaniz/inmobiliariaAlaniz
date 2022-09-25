@@ -1,21 +1,16 @@
 @model InmobiliariaAlaniz.Models.Usuario
 
 @{
-    ViewData["Title"] = "Details";
+    ViewData["Title"] = "Detalles";
 }
 
-<h1>Detalles</h1>
+<h1>Detalle</h1>
 
 <div>
     <h4>Usuario</h4>
     <hr />
     <dl class="row">
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Id)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Id)
-        </dd>
+       
         <dt class = "col-sm-2">
             @Html.DisplayNameFor(model => model.Nombre)
         </dt>
@@ -35,35 +30,19 @@
             @Html.DisplayFor(model => model.Email)
         </dd>
         <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Clave)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Clave)
-        </dd>
-        <dt class = "col-sm-2">
             @Html.DisplayNameFor(model => model.Avatar)
         </dt>
         <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Avatar)
+            <img width="32" src="@Model.Avatar" />
         </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.AvatarFile)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.AvatarFile)
-        </dd>
+       
         <dt class = "col-sm-2">
             @Html.DisplayNameFor(model => model.Rol)
         </dt>
         <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Rol)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.RolesName)
-        </dt>
-        <dd class = "col-sm-10">
             @Html.DisplayFor(model => model.RolesName)
         </dd>
+        
     </dl>
 </div>
 <div>

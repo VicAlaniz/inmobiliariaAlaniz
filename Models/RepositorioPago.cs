@@ -16,9 +16,10 @@ namespace InmobiliariaAlaniz.Models;
 			List<Pago> res = new List<Pago>();
 			using (var conn = new MySqlConnection(connectionString))
 			{
-				string sql = @"SELECT p.Id, FechaPago, 
-                Importe, IdContrato  
-				FROM Pago p JOIN Contrato c ON(p.IdContrato = c.Id)";
+				string sql = @"SELECT p.id, FechaPago, Importe, IdContrato, inm.Direccion, inq.Nombre, inq.Apellido
+                FROM Pago p JOIN Contrato c ON(p.IdContrato = c.id)
+                JOIN Inquilino inq ON(c.IdInquilino = inq.id)
+                JOIN Inmueble inm ON(c.IdInmueble= inm.id)";
 				using (var comm = new MySqlCommand(sql, conn))
 				{
 					conn.Open();
@@ -32,7 +33,17 @@ namespace InmobiliariaAlaniz.Models;
                             Importe = reader.GetDecimal(2),
                             IdContrato = reader.GetInt32(3),
                             Contrato = new Contrato {
-                                Id = reader.GetInt32(3),},
+                                Id = reader.GetInt32(3),
+								Inmueble = new Inmueble
+                                {
+                                    Direccion = reader.GetString(4),
+                                },
+                                Inquilino = new Inquilino
+                                {
+                                    Nombre = reader.GetString(5),
+                                    Apellido = reader.GetString(6),
+                                }
+								},
                            
                         });
                         
@@ -46,8 +57,11 @@ namespace InmobiliariaAlaniz.Models;
 			Pago pago = null;
 			using (var conn = new MySqlConnection(connectionString))
 			{
-				string sql =@"SELECT Id, FechaPago, 
-                Importe, IdContrato, FROM Pago WHERE Id = @id";
+				string sql = @"SELECT p.id, FechaPago, Importe, IdContrato, inm.Direccion, inq.Nombre, inq.Apellido
+                FROM Pago p JOIN Contrato c ON(p.IdContrato = c.id)
+                JOIN Inquilino inq ON(c.IdInquilino = inq.id)
+                JOIN Inmueble inm ON(c.IdInmueble = inm.id)
+                WHERE p.id=@id";
 				using (var comm = new MySqlCommand(sql, conn))
 				{
                     comm.Parameters.Add("@id", MySqlDbType.Int32).Value = id;
@@ -63,7 +77,16 @@ namespace InmobiliariaAlaniz.Models;
                             Importe = reader.GetDecimal(2),
                             IdContrato = reader.GetInt32(3),
                             Contrato = new Contrato {
-                                Id = reader.GetInt32(3),},
+                                Id = reader.GetInt32(3),
+								Inmueble = new Inmueble
+                                {
+                                    Direccion = reader.GetString(4),
+                                },
+                                Inquilino = new Inquilino
+                                {
+                                    Nombre = reader.GetString(5),
+                                    Apellido = reader.GetString(6),
+                                }},
 						};
 					}
 					conn.Close();

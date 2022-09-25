@@ -79,9 +79,9 @@ namespace InmobiliariaAlaniz.Controllers
                         iterationCount: 1000,
                         numBytesRequested: 256 / 8));
                 u.Clave = hashed;
-                //u.Rol = User.IsInRole("Administrador") ? u.Rol : (int)Roles.Empleado;
-                //var nombreAleatorio = Guid.NewGuid();
-                //int res = repo.Alta(u);
+                u.Rol = User.IsInRole("Administrador") ? u.Rol : (int)Roles.Empleado;
+                var nombreAleatorio = Guid.NewGuid();
+                int res = repo.Alta(u);
                 if (u.AvatarFile != null && u.Id > 0){
                     string wwwPath = environment.WebRootPath;
                     string path = Path.Combine(wwwPath, "Uploads");
@@ -95,9 +95,9 @@ namespace InmobiliariaAlaniz.Controllers
                     {
                         u.AvatarFile.CopyTo(stream);
                     }
-                    
+                    repo.Modificacion(u);
                 }
-                repo.Alta(u);
+                
                 return RedirectToAction(nameof(Index));
             }
             catch (Exception ex){
@@ -173,9 +173,14 @@ namespace InmobiliariaAlaniz.Controllers
         }
 
         // GET: Usuarios/Edit/5
-        [Authorize(Policy = "Administrador")]
+        //[Authorize(Policy = "Administrador")]
         public ActionResult Edit(int id) {
             try {
+                if (!User.IsInRole("Administrador")){
+                if (id.ToString() != User.Identity.Name){
+                    return Redirect("/Home/AccesoRestringido");
+                }
+                }
             ViewData["Title"] = "Editar usuario";
             var usuario = repo.ObtenerPorId(id);
             ViewBag.Roles = Usuario.ObtenerRoles();
@@ -187,15 +192,18 @@ namespace InmobiliariaAlaniz.Controllers
             
         }
        
-  
-
         // POST: Usuarios/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
         [Authorize]
         public ActionResult Edit(int id, Usuario u)
         {
-             Usuario usu = null;
+            if (!User.IsInRole("Administrador")){
+                if (id.ToString() != User.Identity.Name){
+                    return Redirect("/Home/AccesoRestringido");
+                }
+                }
+            Usuario usu = null;
             try
             {
                 usu = repo.ObtenerPorId(id);
@@ -238,41 +246,101 @@ namespace InmobiliariaAlaniz.Controllers
                 throw;
             }
         }
-        /*[HttpPost]
+        [Authorize]
+        public ActionResult CambiarClave(int id)
+        {
+           
+
+                var usuario = repo.ObtenerPorId(id);
+                if (usuario != null)
+                {
+                    ViewBag.Usuario = usuario;
+                    return View();
+                }
+                else
+                {
+                    TempData["msg"] = "No se ha encontrado el usuario. Intente Nuevamente";
+                    return Redirect(Request.Headers["referer"].FirstOrDefault());
+                }
+        }
+
+        [HttpPost]
         [ValidateAntiForgeryToken]
         [Authorize]
-        public ActionResult EditPass(int id, PassModel p) {
-            try {
-                Usuario original = repo.ObtenerPorId(id);
-                    var passVieja = p.passOld;
-                    var passNueva = p.passNew;
-                    string hashedOld = Convert.ToBase64String(KeyDerivation.Pbkdf2(
-                        password: passVieja,
-                        salt: System.Text.Encoding.ASCII.GetBytes(configuration["Salt"]),
-                        prf: KeyDerivationPrf.HMACSHA1,
-                        iterationCount: 1000,
-                        numBytesRequested: 256 / 8));
+        public ActionResult CambiarClave(int id, CambiarClave p)
+        {
+            try
+            {
+                if (!User.IsInRole("Administrador"))
+                {
 
-                    if(original.pass == hashedOld && passNueva == p.pass) {
-                        string hashed = Convert.ToBase64String(KeyDerivation.Pbkdf2(
-                            password: p.pass,
-                            salt: System.Text.Encoding.ASCII.GetBytes(configuration["Salt"]),
-                            prf: KeyDerivationPrf.HMACSHA1,
-                            iterationCount: 1000,
-                            numBytesRequested: 256 / 8));
-
-                        original.pass = hashed;
-                    } else {
-                        TempData["Mensaje"] = "Contraseña no coincide";
+                    if (id.ToString() != User.Identity.Name)
+                    {
+                        return Redirect("/Home/AccesoRestringido");
                     }
-                ru.Modificar(original);
+                }
 
-                return RedirectToAction(nameof(Index));
-            } catch (Exception ex) {
+                var usu = repo.ObtenerPorId(id);
+                
+                var returnUrl = String.IsNullOrEmpty(TempData["returnUrl"] as string) ? "/Home" : TempData["returnUrl"].ToString();
+                string hashedClaveVieja = Convert.ToBase64String(KeyDerivation.Pbkdf2(
+                       password: p.PassVieja,
+                       salt: System.Text.Encoding.ASCII.GetBytes(configuration["Salt"]),
+                       prf: KeyDerivationPrf.HMACSHA1,
+                       iterationCount: 1000,
+                       numBytesRequested: 256 / 8));
+                
+                string hashedClaveNueva = Convert.ToBase64String(KeyDerivation.Pbkdf2(
+                       password: p.PassNueva,
+                       salt: System.Text.Encoding.ASCII.GetBytes(configuration["Salt"]),
+                       prf: KeyDerivationPrf.HMACSHA1,
+                       iterationCount: 1000,
+                       numBytesRequested: 256 / 8));
+                
+                string hashedClaveConfirmada = Convert.ToBase64String(KeyDerivation.Pbkdf2(
+                       password: p.PassConfirmada,
+                       salt: System.Text.Encoding.ASCII.GetBytes(configuration["Salt"]),
+                       prf: KeyDerivationPrf.HMACSHA1,
+                       iterationCount: 1000,
+                       numBytesRequested: 256 / 8));
+
+                
+                string PassVieja = usu.Clave;
+
+                if (PassVieja == hashedClaveVieja)
+                {
+                    if (hashedClaveNueva == hashedClaveConfirmada)
+                    {
+                        p.PassNueva = hashedClaveNueva;
+                        p.PassConfirmada = hashedClaveConfirmada;
+                        repo.ModificarClave(id, p);
+                    }
+                    else
+                    {
+                        ModelState.AddModelError("", "Las campos no coinciden");
+                        TempData["returnUrl"] = returnUrl;
+
+                        return View();
+                    }
+
+                    TempData["Mensaje"] = "Clave actualizada";
+                    TempData["returnUrl"] = returnUrl;
+                    return View();
+                }
+                else
+                {
+                    ModelState.AddModelError("", "Clave no coincide");
+                    TempData["returnUrl"] = returnUrl;
+                    return View();
+                }
+            }
+            catch (Exception ex)
+            {
                 throw;
             }
         }
-*/
+
+    
         // GET: Usuarios/Delete/5
         [Authorize(Policy = "Administrador")]
         public ActionResult Delete(int id)
