@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: 127.0.0.1
--- Tiempo de generación: 21-08-2022 a las 03:36:37
+-- Tiempo de generación: 25-09-2022 a las 18:05:14
 -- Versión del servidor: 10.4.21-MariaDB
 -- Versión de PHP: 7.4.24
 
@@ -35,6 +35,15 @@ CREATE TABLE `contrato` (
   `FechaFin` date NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
+--
+-- Volcado de datos para la tabla `contrato`
+--
+
+INSERT INTO `contrato` (`Id`, `IdInquilino`, `IdInmueble`, `FechaInicio`, `FechaFin`) VALUES
+(4, 4, 3, '2022-09-05', '2022-12-08'),
+(5, 2, 1, '2022-09-29', '2023-01-26'),
+(7, 4, 4, '2022-09-25', '2023-09-25');
+
 -- --------------------------------------------------------
 
 --
@@ -51,6 +60,15 @@ CREATE TABLE `inmueble` (
   `Precio` decimal(10,0) NOT NULL,
   `IdPropietario` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+--
+-- Volcado de datos para la tabla `inmueble`
+--
+
+INSERT INTO `inmueble` (`Id`, `Direccion`, `Uso`, `Tipo`, `CantAmbientes`, `Coordenadas`, `Precio`, `IdPropietario`) VALUES
+(1, 'Junin 1551', 'Particular', 'Casa', 4, '6154165, 652625', '30000', 1),
+(3, 'Pringles 251', 'Comercial', 'Negocio', 2, '61156465, 5465151', '45000', 3),
+(4, 'San Martin 756', 'Comercial', 'Local', 2, '2254467, 2265841', '55000', 4);
 
 -- --------------------------------------------------------
 
@@ -72,7 +90,7 @@ CREATE TABLE `inquilino` (
 --
 
 INSERT INTO `inquilino` (`Id`, `Nombre`, `Apellido`, `Dni`, `Telefono`, `Email`) VALUES
-(1, 'Victoria', 'Alaniz', '31542775', '(266) 455-2265', 'mvicalaniz@gmail.com'),
+(1, 'Maria', 'Alaniz', '31542775', '(266) 455-2265', 'mvicalaniz@gmail.com'),
 (2, 'Mariano', 'Luz', '26415235', '351264581', 'mariano@gmail.com'),
 (4, 'Candela', 'Hollman', '21456956', '2564458220', 'flkdf@gmail.com');
 
@@ -83,11 +101,19 @@ INSERT INTO `inquilino` (`Id`, `Nombre`, `Apellido`, `Dni`, `Telefono`, `Email`)
 --
 
 CREATE TABLE `pago` (
-  `NroPago` int(11) NOT NULL,
+  `Id` int(11) NOT NULL,
   `FechaPago` date NOT NULL,
   `Importe` decimal(10,0) NOT NULL,
   `IdContrato` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+--
+-- Volcado de datos para la tabla `pago`
+--
+
+INSERT INTO `pago` (`Id`, `FechaPago`, `Importe`, `IdContrato`) VALUES
+(2, '2022-09-22', '45500', 5),
+(3, '2022-09-25', '55000', 7);
 
 -- --------------------------------------------------------
 
@@ -111,7 +137,33 @@ CREATE TABLE `propietario` (
 INSERT INTO `propietario` (`Id`, `Nombre`, `Apellido`, `Dni`, `Telefono`, `Email`) VALUES
 (1, 'Ramiro', 'Alaniz', '27376475', '2664585455', 'ramiro@gmail.com'),
 (2, 'Victoria', 'Alaniz', '31542775', '(266) 455-2265', 'mvicalaniz@gmail.com'),
-(3, 'Facundo', 'Suarez', '25648522', '26640258426', 'facundo@gmail.com');
+(3, 'Facundo', 'Suarez', '25648522', '26640258426', 'facundo@gmail.com'),
+(4, 'Juan', 'Carlos', '21546895', '2664558964', 'juan@mail.com');
+
+-- --------------------------------------------------------
+
+--
+-- Estructura de tabla para la tabla `usuario`
+--
+
+CREATE TABLE `usuario` (
+  `Id` int(11) NOT NULL,
+  `Nombre` varchar(30) NOT NULL,
+  `Apellido` varchar(30) NOT NULL,
+  `Email` varchar(40) NOT NULL,
+  `Clave` varchar(60) NOT NULL,
+  `Avatar` varchar(60) DEFAULT NULL,
+  `Rol` int(11) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+--
+-- Volcado de datos para la tabla `usuario`
+--
+
+INSERT INTO `usuario` (`Id`, `Nombre`, `Apellido`, `Email`, `Clave`, `Avatar`, `Rol`) VALUES
+(1, 'Victoria', 'Alaniz', 'vic@mail.com', '3A0G2+zJ3luLnlC44+Xe5HGw/9RWJNoyF2XZACvev20=', NULL, 1),
+(2, 'Gaspar', 'Melto', 'gaspi@mail.com', 'myl4T6FgkMUdldPQ96rZUnNYn0ho5fyVIc39WWFLd8Y=', '/Uploads\\avatar_2.jpg', 2),
+(3, 'Lucho', 'Luz', 'lucho@mail.com', '3A0G2+zJ3luLnlC44+Xe5HGw/9RWJNoyF2XZACvev20=', '/Uploads\\avatar_3.jpg', 2);
 
 --
 -- Índices para tablas volcadas
@@ -122,8 +174,8 @@ INSERT INTO `propietario` (`Id`, `Nombre`, `Apellido`, `Dni`, `Telefono`, `Email
 --
 ALTER TABLE `contrato`
   ADD PRIMARY KEY (`Id`),
-  ADD UNIQUE KEY `IdInquilino` (`IdInquilino`) USING BTREE,
-  ADD UNIQUE KEY `IdInmueble` (`IdInmueble`) USING BTREE;
+  ADD UNIQUE KEY `IdInmueble` (`IdInmueble`) USING BTREE,
+  ADD KEY `IdInquilino` (`IdInquilino`) USING BTREE;
 
 --
 -- Indices de la tabla `inmueble`
@@ -142,13 +194,19 @@ ALTER TABLE `inquilino`
 -- Indices de la tabla `pago`
 --
 ALTER TABLE `pago`
-  ADD PRIMARY KEY (`NroPago`),
+  ADD PRIMARY KEY (`Id`),
   ADD KEY `IdContrato` (`IdContrato`);
 
 --
 -- Indices de la tabla `propietario`
 --
 ALTER TABLE `propietario`
+  ADD PRIMARY KEY (`Id`);
+
+--
+-- Indices de la tabla `usuario`
+--
+ALTER TABLE `usuario`
   ADD PRIMARY KEY (`Id`);
 
 --
@@ -159,13 +217,13 @@ ALTER TABLE `propietario`
 -- AUTO_INCREMENT de la tabla `contrato`
 --
 ALTER TABLE `contrato`
-  MODIFY `Id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `Id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
 
 --
 -- AUTO_INCREMENT de la tabla `inmueble`
 --
 ALTER TABLE `inmueble`
-  MODIFY `Id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `Id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 
 --
 -- AUTO_INCREMENT de la tabla `inquilino`
@@ -177,12 +235,18 @@ ALTER TABLE `inquilino`
 -- AUTO_INCREMENT de la tabla `pago`
 --
 ALTER TABLE `pago`
-  MODIFY `NroPago` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `Id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
 -- AUTO_INCREMENT de la tabla `propietario`
 --
 ALTER TABLE `propietario`
+  MODIFY `Id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+
+--
+-- AUTO_INCREMENT de la tabla `usuario`
+--
+ALTER TABLE `usuario`
   MODIFY `Id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
