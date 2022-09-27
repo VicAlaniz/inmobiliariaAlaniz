@@ -168,8 +168,9 @@ namespace InmobiliariaAlaniz.Controllers
         {
             ViewData["Title"] = "Mi perfil";
             var usu = repo.ObtenerPorEmail(User.Identity.Name);
+            //var u = usu.Id;
             ViewBag.Roles = Usuario.ObtenerRoles();
-            return View("Edit", usu);
+            return View("Details", usu);
         }
 
         // GET: Usuarios/Edit/5
@@ -249,8 +250,6 @@ namespace InmobiliariaAlaniz.Controllers
         [Authorize]
         public ActionResult CambiarClave(int id)
         {
-           
-
                 var usuario = repo.ObtenerPorId(id);
                 if (usuario != null)
                 {
@@ -259,7 +258,7 @@ namespace InmobiliariaAlaniz.Controllers
                 }
                 else
                 {
-                    TempData["msg"] = "No se ha encontrado el usuario. Intente Nuevamente";
+                    TempData["mensaje"] = "No se ha encontrado el usuario. Intente Nuevamente";
                     return Redirect(Request.Headers["referer"].FirstOrDefault());
                 }
         }
@@ -313,19 +312,31 @@ namespace InmobiliariaAlaniz.Controllers
                     {
                         p.PassNueva = hashedClaveNueva;
                         p.PassConfirmada = hashedClaveConfirmada;
-                        repo.ModificarClave(id, p);
+                        var cambio = repo.ModificarClave(id, p);
+                          if (cambio > 0)
+                    {
+                        ViewData["mensaje"] = "¡Clave cambiada con éxito!";
+                        //return Redirect(Request.Headers["referer"].FirstOrDefault());
+                        return View();
                     }
                     else
                     {
-                        ModelState.AddModelError("", "Las campos no coinciden");
+                        TempData["mensaje"] = "Error, pruebe otra vez";
+                        return RedirectToAction(nameof(CambiarClave), new { id = id});
+                    }
+
+                    }
+                    else
+                    {
+                        ModelState.AddModelError("", "Los campos no coinciden");
                         TempData["returnUrl"] = returnUrl;
 
                         return View();
                     }
 
-                    TempData["Mensaje"] = "Clave actualizada";
-                    TempData["returnUrl"] = returnUrl;
-                    return View();
+                    //TempData["Mensaje"] = "Clave actualizada";
+                    //TempData["returnUrl"] = returnUrl;
+                   // return View();
                 }
                 else
                 {

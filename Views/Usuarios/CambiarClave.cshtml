@@ -3,7 +3,18 @@
 @{
     ViewData["Title"] = "Actualizar Clave";
     //Usuario usuario = (Usuario)ViewBag.Usuario;
-
+}
+@if (ViewData["mensaje"] != null)
+{
+    <div class="row">
+        <div class="col-sm-4">
+            <div class="alert alert-info alert-dismissible fade show" role="alert">
+                <span>@ViewData["mensaje"]</span>
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close">
+                </button>
+            </div>
+        </div>
+    </div>
 }
 
 <h1>Actualizar Clave</h1>
