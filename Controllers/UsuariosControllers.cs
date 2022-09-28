@@ -178,7 +178,9 @@ namespace InmobiliariaAlaniz.Controllers
         public ActionResult Edit(int id) {
             try {
                 if (!User.IsInRole("Administrador")){
-                if (id.ToString() != User.Identity.Name){
+                    var usu = repo.ObtenerPorId(id);
+                    var mail = usu.Email;
+                if (mail != User.Identity.Name){
                     return Redirect("/Home/AccesoRestringido");
                 }
                 }
@@ -200,7 +202,9 @@ namespace InmobiliariaAlaniz.Controllers
         public ActionResult Edit(int id, Usuario u)
         {
             if (!User.IsInRole("Administrador")){
-                if (id.ToString() != User.Identity.Name){
+                repo.ObtenerPorId(id);
+                    var mail = u.Email;
+                if (mail != User.Identity.Name){
                     return Redirect("/Home/AccesoRestringido");
                 }
                 }
@@ -272,7 +276,8 @@ namespace InmobiliariaAlaniz.Controllers
             {
                 if (!User.IsInRole("Administrador"))
                 {
-
+                    var u = repo.ObtenerPorId(id);
+                    var mail = u.Email;
                     if (id.ToString() != User.Identity.Name)
                     {
                         return Redirect("/Home/AccesoRestringido");
