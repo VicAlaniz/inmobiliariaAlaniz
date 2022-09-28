@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: 127.0.0.1
--- Tiempo de generación: 25-09-2022 a las 18:05:14
+-- Tiempo de generación: 27-09-2022 a las 17:11:11
 -- Versión del servidor: 10.4.21-MariaDB
 -- Versión de PHP: 7.4.24
 
@@ -66,9 +66,9 @@ CREATE TABLE `inmueble` (
 --
 
 INSERT INTO `inmueble` (`Id`, `Direccion`, `Uso`, `Tipo`, `CantAmbientes`, `Coordenadas`, `Precio`, `IdPropietario`) VALUES
-(1, 'Junin 1551', 'Particular', 'Casa', 4, '6154165, 652625', '30000', 1),
-(3, 'Pringles 251', 'Comercial', 'Negocio', 2, '61156465, 5465151', '45000', 3),
-(4, 'San Martin 756', 'Comercial', 'Local', 2, '2254467, 2265841', '55000', 4);
+(1, 'Junin 1551', 'Casa', 'Hogar', 4, '6154165, 652625', '30000', 1),
+(3, 'Pringles 251', 'Comercio', 'Comercio', 2, '61156465, 5465151', '45000', 3),
+(4, 'San Martin 756', 'Comercio', 'Comercio', 2, '2254467, 2265841', '55000', 4);
 
 -- --------------------------------------------------------
 
@@ -161,8 +161,8 @@ CREATE TABLE `usuario` (
 --
 
 INSERT INTO `usuario` (`Id`, `Nombre`, `Apellido`, `Email`, `Clave`, `Avatar`, `Rol`) VALUES
-(1, 'Victoria', 'Alaniz', 'vic@mail.com', '3A0G2+zJ3luLnlC44+Xe5HGw/9RWJNoyF2XZACvev20=', NULL, 1),
-(2, 'Gaspar', 'Melto', 'gaspi@mail.com', 'myl4T6FgkMUdldPQ96rZUnNYn0ho5fyVIc39WWFLd8Y=', '/Uploads\\avatar_2.jpg', 2),
+(1, 'Victoria', 'Alaniz', 'vic@mail.com', '3A0G2+zJ3luLnlC44+Xe5HGw/9RWJNoyF2XZACvev20=', '/Uploads\\avatar_1.jpg', 1),
+(2, 'Gaspar', 'Melto1', 'gaspi@mail.com', 'myl4T6FgkMUdldPQ96rZUnNYn0ho5fyVIc39WWFLd8Y=', '/Uploads\\avatar_2.jpg', 2),
 (3, 'Lucho', 'Luz', 'lucho@mail.com', '3A0G2+zJ3luLnlC44+Xe5HGw/9RWJNoyF2XZACvev20=', '/Uploads\\avatar_3.jpg', 2);
 
 --
