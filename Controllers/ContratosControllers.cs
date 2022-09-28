@@ -9,7 +9,7 @@ using Microsoft.AspNetCore.Authorization;
 
 namespace InmobiliariaAlaniz.Controllers
 {
-    [Authorize]
+    
     public class ContratosController : Controller
     {
         RepositorioContrato repo;
@@ -37,7 +37,7 @@ namespace InmobiliariaAlaniz.Controllers
             }
         }
 
-        
+        [Authorize]
         public ActionResult Details(int id)
         {
             try {
@@ -49,7 +49,7 @@ namespace InmobiliariaAlaniz.Controllers
             }
         }
 
-        
+        [Authorize]
         public ActionResult Create()
         {
             try {
@@ -65,6 +65,7 @@ namespace InmobiliariaAlaniz.Controllers
         
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize]
         public ActionResult Create(Contrato contrato)
         {
            try
@@ -86,7 +87,7 @@ namespace InmobiliariaAlaniz.Controllers
             }
         }
 
-        
+        [Authorize]
         public ActionResult Edit(int id)
         {
             try {
@@ -105,6 +106,7 @@ namespace InmobiliariaAlaniz.Controllers
        
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize]
         public ActionResult Edit(int id, Contrato contrato)
         {
             Contrato contrato1 = null;
@@ -128,7 +130,7 @@ namespace InmobiliariaAlaniz.Controllers
             }
         }
 
-        
+        [Authorize(Policy = "Administrador")]
         public ActionResult Delete(int id)
         {
              try {
@@ -144,6 +146,7 @@ namespace InmobiliariaAlaniz.Controllers
        
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize(Policy = "Administrador")]
         public ActionResult Delete(int id, Contrato contrato)
         {
            try

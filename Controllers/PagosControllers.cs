@@ -9,19 +9,19 @@ using Microsoft.AspNetCore.Authorization;
 
 namespace InmobiliariaAlaniz.Controllers
 {
-    [Authorize]
+    
     public class PagosController : Controller
     {
         RepositorioPago repo;
         RepositorioContrato repositorioContrato;
   
-
+        
         public PagosController() {
             repo = new RepositorioPago();
             repositorioContrato = new RepositorioContrato();
           
         }
-      
+        
         public ActionResult Index()
         {
             try{
@@ -36,6 +36,7 @@ namespace InmobiliariaAlaniz.Controllers
                 throw;
             }
         }
+        [Authorize]
         public ActionResult Details(int id)
         {
             try {
@@ -47,7 +48,7 @@ namespace InmobiliariaAlaniz.Controllers
             }
         }
 
-        
+        [Authorize]
         public ActionResult Create(int id)
         {
             try {
@@ -63,6 +64,7 @@ namespace InmobiliariaAlaniz.Controllers
         
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize]
         public ActionResult Create(int id, Pago pago)
         {
            try
@@ -77,7 +79,7 @@ namespace InmobiliariaAlaniz.Controllers
             }
         }
 
-        
+        [Authorize]
         public ActionResult Edit(int id)
         {
             try {
@@ -93,7 +95,7 @@ namespace InmobiliariaAlaniz.Controllers
             
         }
 
-       
+        [Authorize]
         [HttpPost]
         [ValidateAntiForgeryToken]
         public ActionResult Edit(int id, Pago pago)
@@ -117,7 +119,7 @@ namespace InmobiliariaAlaniz.Controllers
             }
         }
 
-        
+        [Authorize(Policy = "Administrador")]
         public ActionResult Delete(int id)
         {
              try {
@@ -133,7 +135,7 @@ namespace InmobiliariaAlaniz.Controllers
        
         [HttpPost]
         [ValidateAntiForgeryToken]
-        
+        [Authorize(Policy = "Administrador")]
         public ActionResult Delete(int id, Pago pago)
         {
            try

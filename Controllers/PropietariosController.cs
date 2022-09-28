@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using InmobiliariaAlaniz.Models;
+using Microsoft.AspNetCore.Authorization;
 
 namespace InmobiliariaAlaniz.Controllers
 {
@@ -28,6 +29,7 @@ namespace InmobiliariaAlaniz.Controllers
         }
 
         // GET: Propietarios/Details/5
+        [Authorize]
         public ActionResult Details(int id)
         { 
             try {
@@ -41,6 +43,7 @@ namespace InmobiliariaAlaniz.Controllers
         }
 
         // GET: Propietarios/Create
+        [Authorize]
         public ActionResult Create()
         {
             try {
@@ -54,6 +57,7 @@ namespace InmobiliariaAlaniz.Controllers
         // POST: Propietarios/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize]
         public ActionResult Create(Propietario propietario)
         {
             try
@@ -75,6 +79,7 @@ namespace InmobiliariaAlaniz.Controllers
         }
 
         // GET: Propietarios/Edit/5
+        [Authorize]
         public ActionResult Edit(int id)
         {
             try {
@@ -90,6 +95,7 @@ namespace InmobiliariaAlaniz.Controllers
         // POST: Propietarios/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize]
         public ActionResult Edit(int id, Propietario p)
         {
             Propietario prop = null;
@@ -114,6 +120,7 @@ namespace InmobiliariaAlaniz.Controllers
         }
 
         // GET: Propietarios/Delete/5
+        [Authorize(Policy = "Administrador")]
         public ActionResult Delete(int id)
         {
             try {
@@ -128,6 +135,7 @@ namespace InmobiliariaAlaniz.Controllers
         // POST: Propietarios/Delete/5
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize(Policy = "Administrador")]
         public ActionResult Delete(int id, Propietario propietario)
         {
             try

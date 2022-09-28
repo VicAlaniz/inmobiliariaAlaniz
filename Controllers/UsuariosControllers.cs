@@ -38,7 +38,7 @@ namespace InmobiliariaAlaniz.Controllers
         }
 
         // GET: Usuarios/Details/5
-        [Authorize(Policy = "Administrador")]
+        [Authorize]
         public ActionResult Details(int id)
         {
             try {
@@ -174,7 +174,7 @@ namespace InmobiliariaAlaniz.Controllers
         }
 
         // GET: Usuarios/Edit/5
-        //[Authorize(Policy = "Administrador")]
+        [Authorize]
         public ActionResult Edit(int id) {
             try {
                 if (!User.IsInRole("Administrador")){

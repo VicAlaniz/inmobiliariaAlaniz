@@ -9,7 +9,7 @@ using Microsoft.AspNetCore.Authorization;
 
 namespace InmobiliariaAlaniz.Controllers
 {
-    [Authorize]
+    
     public class InquilinosController : Controller
     {
         RepositorioInquilino repo;
@@ -30,6 +30,7 @@ namespace InmobiliariaAlaniz.Controllers
         }
 
         // GET: Inquilinos/Details/5
+        [Authorize]
         public ActionResult Details(int id)
         {
             try {
@@ -42,6 +43,7 @@ namespace InmobiliariaAlaniz.Controllers
         }
 
         // GET: Inquilinos/Create
+        [Authorize]
         public ActionResult Create()
         {
             try {
@@ -55,6 +57,7 @@ namespace InmobiliariaAlaniz.Controllers
         // POST: Inquilinos/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize]
         public ActionResult Create(Inquilino inquilino)
         {
            try
@@ -76,6 +79,7 @@ namespace InmobiliariaAlaniz.Controllers
         }
 
         // GET: Inquilinos/Edit/5
+        [Authorize]
         public ActionResult Edit(int id)
         {
             try {
@@ -91,6 +95,7 @@ namespace InmobiliariaAlaniz.Controllers
         // POST: Inquilinos/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize]
         public ActionResult Edit(int id, Inquilino i)
         {
             Inquilino inc = null;
@@ -115,6 +120,7 @@ namespace InmobiliariaAlaniz.Controllers
         }
 
         // GET: Inquilinos/Delete/5
+        [Authorize(Policy = "Administrador")]
         public ActionResult Delete(int id)
         {
              try {
@@ -129,6 +135,7 @@ namespace InmobiliariaAlaniz.Controllers
         // POST: Inquilinos/Delete/5
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize(Policy = "Administrador")]
         public ActionResult Delete(int id, Inquilino inquilino)
         {
            try
